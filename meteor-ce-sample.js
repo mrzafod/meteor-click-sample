@@ -17,7 +17,7 @@ if(Meteor.isClient) {
 		this.input = this.find('[contenteditable=true]');
 
 		this.autorun((function(self) {
-			function() {
+			return function() {
 				self.input.innerText = (Messages.findOne(self.data._id) || {}).body;
 			};
 		})(this));
