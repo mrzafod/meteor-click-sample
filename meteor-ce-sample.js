@@ -2,49 +2,38 @@
 Messages = new Meteor.Collection('Messages');
 
 if(Meteor.isClient) {
-	Template.messages.created = function () {
-		this.sub = Meteor.subscribe('messages');
+	Template.viewsWrapperWithIf.created = function () {
+		this.wrapperCounter = new Blaze.ReactiveVar(1);
 	}
 
-	Template.messages.helpers({
-		messages: function () {
-			return Messages.find({});
-		}
-	});
-
-
-	Template.message.rendered = function () {
-		this.input = this.find('[contenteditable=true]');
-
-		this.autorun((function(self) {
-			return function() {
-				self.input.innerText = (Messages.findOne(self.data._id) || {}).body;
-			};
-		})(this));
+	Template.viewsWrapperWithIf.viewCountIs = function (num) {
+		return num == UI._templateInstance().wrapperCounter.get()
 	}
 
-	Template.message.events({
-		'click [action=edit]': function (event, tmpl) {
+	Template.viewsWrapperWithIf.events({
+		'click *': function (event, tmpl) {
 			event.preventDefault();
-			Messages.update(tmpl.data._id, {$set: {body: tmpl.input.innerText}})
+			event.stopImmediatePropagation();
+			var next = (tmpl.wrapperCounter.get() || 1) + 1;
+			tmpl.wrapperCounter.set(next > 6 ? 1 : next)
 		}
 	})
 
-	Template.newMessage.rendered = function () {
-		this.input = this.firstNode
-	}	
 
-	Template.newMessage.events({
-		'click [action=send]': function (event, tmpl) {
+	Template.viewsWrapperWithUIDynamic.created = function () {
+		Session.set('wrapperCounter', 1)
+	}
+
+	Template.viewsWrapperWithUIDynamic.viewCountName = function () {
+		return 'view' + Session.get('wrapperCounter');
+	}
+
+	Template.viewsWrapperWithUIDynamic.events({
+		'click *': function (event, tmpl) {
 			event.preventDefault();
-			Messages.insert({body: tmpl.input.innerText});
-			tmpl.input.innerText = '';
+			event.stopImmediatePropagation();
+			var next = (Session.get('wrapperCounter') || 1) + 1;
+			Session.set('wrapperCounter', next > 6 ? 1 : next)
 		}
-	})
-}
-
-if(Meteor.isServer) {
-	Meteor.publish('messages', function () {
-		return Messages.find({})
 	})
 }

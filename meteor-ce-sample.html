@@ -1,29 +1,140 @@
 <head>
   <title>meteor-ce-sample</title>
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-	<div  style='width: 420px;'>
-		<h3>Wellcome to chat</h3>
-		{{> messages}}
-		{{> newMessage}}
-	</div>	
+	<div style='width: 100%; height: 100%; padding: 0; font-family: "Montserrat"; color: white;'>
+		{{> viewsWrapperWithIf}}
+		{{> viewsWrapperWithUIDynamic}}
+	</div>
 </body>
 
-<template name='messages'>
-	{{#each messages}}
-		{{> message this}}
-	{{/each}}
+<template name='viewsWrapperWithIf'>
+	<div style='padding: 5%; background: #34495e; cursor: pointer; float: left; width: 30%;'>
+		<h4>This section works with OLDSCOOL if-else. It gets its reactive data from Template's reactive var (Blaze.ReactiveVar). Just click anywhere to toggle template</h4>
+		{{#if viewCountIs 1}} {{> view1}} {{/if}}
+		{{#if viewCountIs 2}} {{> view2}} {{/if}}
+		{{#if viewCountIs 3}} {{> view3}} {{/if}}
+		{{#if viewCountIs 4}} {{> view4}} {{/if}}
+		{{#if viewCountIs 5}} {{> view5}} {{/if}}
+		{{#if viewCountIs 6}} {{> view6}} {{/if}}
+	</div>
 </template>
 
-<template name='message'>
-	<div style='margin-bottom: 40px;'>
-		<div contenteditable='true' style='border: 1px solid whitesmoke;'></div>
-		<button action='edit'>Save edited</button>
-	</div>	
+<template name='viewsWrapperWithUIDynamic'>
+	<div style='padding: 5%; background: #1abc9c; cursor: pointer; float: right; width: 30%;'>
+		<h4>This section works with UI.dynamic. It gets its reactive data from Session variable. Just click anywhere to toggle template</h4>
+		{{>UI.dynamic template=viewCountName}}
+	</div>
 </template>
 
-<template name='newMessage'>
-	<div contenteditable='true' style='border: 1px solid gray;'></div>
-	<button action='send'>Send chat message</button>
+<template name='view1'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #1</h1>
+		<p>
+			Template.myTemplate.helpers(helpers) Client
+
+			Specify template helpers available to this template.
+
+			Arguments
+			helpers Object
+			Dictionary of helper functions by name.
+
+			Each template has a local dictionary of helpers that are made available to it, and this call specifies helpers to add to the template's dictionary.
+		</p>
+	</div>
+</template>
+
+<template name='view2'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #2</h1>
+		<p>
+			Template.myTemplate.events(eventMap) Client
+
+			Specify event handlers for this template.
+
+			Arguments
+			eventMap Event map
+			Event handlers to associate with this template.
+
+			Declare event handlers for instances of this template. Multiple calls add new event handlers in addition to the existing ones.
+
+			See Event Maps for a detailed description of the event map format and how event handling works in Meteor.
+		</p>
+	</div>
+</template>
+
+<template name='view3'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #3</h1>
+		<p>
+			Template.myTemplate.rendered = function ( ) { ... } Client
+
+			Provide a callback when an instance of a template is rendered.
+
+			This callback is called once when an instance of Template.myTemplate is rendered into DOM nodes and put into the document for the first time.
+
+			In the body of the callback, this is a template instance object that is unique to this occurrence of the template and persists across re-renderings. Use the created and destroyed callbacks to perform initialization or clean-up on the object.
+
+			Because your template has been rendered, you can use functions like this.findAll which look at its DOM nodes.
+		</p>
+	</div>
+</template>
+
+<template name='view4'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #4</h1>
+		<p>
+			Template.myTemplate.created = function ( ) { ... } Client
+
+			Provide a callback when an instance of a template is created.
+
+			This callback is called before your template's logic is evaluated for the first time. Inside the callback, this is the new template instance object. Properties you set on this object will be visible from the rendered and destroyed callbacks and from event handlers.
+
+			This callback fires once and is the first callback to fire. Every created has a corresponding destroyed; that is, if you get a created callback with a certain template instance object in this, you will eventually get a destroyed callback for the same object.
+
+			The created callback is not currently very useful. In a later release, the template instance object (or something like it) will be visible from helper functions, and created will be a useful way to set up values that are read from helpers. For now, you probably just want to use rendered.
+		</p>
+	</div>
+</template>
+
+<template name='view5'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #5</h1>
+		<p>
+			template.findAll(selector) and template.$(selector) Client
+
+			Find all elements matching selector in this template instance.
+
+			Arguments
+			selector String
+			The CSS selector to match, scoped to the template contents.
+
+			template.findAll returns an array of DOM elements matching selector.
+
+			template.$ returns a jQuery object of those same elements. jQuery objects are similar to arrays, with additional methods defined by the jQuery library.
+
+			The template instance serves as the document root for the selector. Only elements inside the template and its sub-templates can match parts of the selector.
+		</p>
+	</div>
+</template>
+
+<template name='view6'>
+	<div style='padding: 40px;'>
+		<h1>Hello I am view #6</h1>
+		<p>
+			template.autorun(runFunc) Client
+
+			A version of Tracker.autorun that is stopped when the template is destroyed.
+
+			Arguments
+			runFunc Function
+			The function to run. It receives one argument: a Tracker.Computation object.
+
+			You can use this.autorun from a created or rendered callback to reactively update the DOM or the template instance. The Computation is automatically stopped when the template is destroyed.
+
+			Alias for template.view.autorun.
+		</p>
+	</div>
 </template>
